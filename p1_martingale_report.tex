@@ -23,7 +23,7 @@ We will analyze the results of the Monte Cristo simulation to determine if a pla
 
 \section{Introduction}
 American Roulette is a popular gambling game in the United States. The game is played by spinning a ball inside a wheel that contains 18
-red slots, 18 black slots, and 2 green slots. The number/color that the ball lands on determines the winner. The simplest bet in this game is 
+red slots, 18 black slots, and 2 green slots. The slot that the ball lands on determines the winner. The simplest bet in this game is 
 on black or red, both of which pay even money. 
 Over time, the casino would expect to be profitable because the player has 18/38 chance (47.37\%) to win. 
 However, "Profesor Barch's Strategy" has been proposed with the hopes of being profitable.
@@ -37,7 +37,7 @@ money as well as the risk the player takes on.
 
 \section{Experiments}
 In order to test Profesor Barch's strategy, we developed a simulator to measure results from randomly generated "episodes".
-Each episode tracked the resutls of a player playing 1000 spins while following the strategy.
+Each episode tracked the results of a player playing 1000 spins while following the strategy.
 If the player wins \$80, they stop playing and take their winnings.
 The results were measured to determine how profitable the strategy can be expected to be.
 
@@ -104,11 +104,10 @@ The standard deviation is much more stable than before, but is consistently very
 \captionof{figure}{This graph shows the median and standard deviation of winnings for spins across 1000 episodes with a bankroll of \$256.}\label{fig:figure5}%
 \end{jdffigure}
 
-\textbf{Figure 5}
 On the other hand, \textbf{Figure 5} shows the median still approaches \$80.
 This tells us that most players are still achieving their goal of \$80 even with a limited bankroll of \$256.
 Hoever, the extremely high standard deviation should warn potential gamblers that the potential for losses are very high.
-In Experiment 2, 292 / 1000 players were forced to stop playing after losing \$256.
+In Experiment 2, 292 out of 1000 players were forced to stop playing after losing \$256.
 
 \section{Questions}
 
