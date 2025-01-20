@@ -7,7 +7,7 @@
 
 \author{Andrew Myers}
 \email{amyers72@gatech.edu}
-\title{CS 7646: Project X - TITLE GOES HERE}
+\title{CS 7646: Project 3 - Assess Learners}
 
 \begin{document}
 %\lsstyle
@@ -15,6 +15,7 @@
 \maketitle
 
 \begin{abstract}
+	TODO
 	Welcome to Joyner Document Format (JDF) v2.2! JDF is primarily intended to standardize page lengths while ensuring readability. 
 	Note that you are required to use JDF for all written assignments, but we will not perform explicit formatting checks. 
 	So, while improper formatting may be subject to penalties, you should not worry too much about whether your submission conforms to 
@@ -24,6 +25,54 @@
 	\href{https://support.apple.com/guide/pages/intro-to-paragraph-styles-tanaa39b0aa3/mac}{Apple Pages}, and 
 	\href{https://www.bazroberts.com/2016/04/19/google-docs-paragraph-styles-headings/}{Google Docs}.} If you do so, you do not need to verify that the style was followed.
 \end{abstract}
+
+\section{Introduction}
+Supervised machine learning algorithms are able to analyze data to make predictions.
+However, these algorithms may not perform as well as expected due to overfitting.
+Overfitting occurs when the model matches the training data too closely and can't perform as well on new data.
+In this report, we will analyze the performance of a Decision Tree Learner and a Random Tree Learner on a set of data.
+We will analyze their performance with respect to overifitting and experiement with the number of tree leaves.
+At first glance, it seems reasonable to believe that the Decision Tree learner will perform better than the Random Tree learner because it makes data-informed decisions instead of randomness.
+Similarly, it makes sense that increasing the number of leaves (by decreasing the size of leaves) in either tree will perform better as it utilizes a bigger tree with more potential outcomes.
+However, both of these factors also make the models more likely to overfit.
+In practice, we hypothesize that Random Tree Learners can be just as effective as Decision Tree Learners.
+We believe that adjusting the tree size and utilizing bagging techniques can improve the performance of the models.
+
+\section{Methods}
+
+Note: All experiments will use the same training data (\%60 of data set) and testing data (\%40 of data set) to train and evaluate the models.
+\subsection{Experiment 1}
+First, we will look at the effect the size of leaves has on the performance of the Decision Tree Learner.
+To do this, we will train the decision tree model over 60\% of the data using leaf sizes of 1, 2, 3, 5, 10, 20, and 30.
+We will then use the Root Mean Squared Error (RMSE) to measure the performance of the model on the remaining 40\% of data and see if overfitting has occurred.
+
+\subsection{Experiment 2}
+Next, we will see if utilizing bagging techniques helps improve the performance and counterac overfitting.
+To achieve this, 30 models (or bags), each trained with a random subset of 60\% of the training data from Experiment 1, will have their predictions averaged to make a final prediction.\
+We will still use the Decision Tree Learner and adjust the leaf sizes to determine the maount of overfitting that is occurring.
+
+\subsection{Experiment 3}
+Finally, we will compare the Decision Tree Learner to the Random Tree Learner.
+Here, we will see if the extra "knowledge" built into the Decision Tree Learner is actually beneficial or just leads to overfitting.
+Once again, both models will be trained on 60\% of the data and tested on the remaining 40\%.
+However, this time their performance will be measured based on their Maximum Error (ME) and Coefficient of Determination (R-squared). % // TODO finish this
+
+
+\section{Discussion}
+
+\subsection{Experiment 1}
+\subsection{Experiment 2}
+\subsection{Experiment 3}
+
+\section{Summary}
+
+
+
+
+
+
+
+
 
 \section{Typography}
 All text in JDF should be set in the Palatino typeface. It is available practically everywhere as a system font: Google Docs offers a version 
