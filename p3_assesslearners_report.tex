@@ -15,15 +15,9 @@
 \maketitle
 
 \begin{abstract}
-	TODO
-	Welcome to Joyner Document Format (JDF) v2.2! JDF is primarily intended to standardize page lengths while ensuring readability. 
-	Note that you are required to use JDF for all written assignments, but we will not perform explicit formatting checks. 
-	So, while improper formatting may be subject to penalties, you should not worry too much about whether your submission conforms to 
-	every minute detail; the most important elements are margins, font, font sizes, and line spacing. Just make a copy of one of the provided templates 
-	and replace its contents with your own, using the built-in paragraph styles.\footnote{Here are instructions for 
-	\href{https://support.office.com/en-us/article/Video-Using-Styles-in-Word-9db4c0f4-2754-4294-9758-c14a0abd8cfa}{Microsoft Word}, 
-	\href{https://support.apple.com/guide/pages/intro-to-paragraph-styles-tanaa39b0aa3/mac}{Apple Pages}, and 
-	\href{https://www.bazroberts.com/2016/04/19/google-docs-paragraph-styles-headings/}{Google Docs}.} If you do so, you do not need to verify that the style was followed.
+	Machine learning models can be powerful tools for making predictions, but they do have limitations.
+	For example, models can be overtrained and overfit on training data, leading to poorer performance on new data.
+	In this report, we will analyze different machine learning models and analyze some of their tradeoffs.
 \end{abstract}
 
 \section{Introduction}
@@ -43,198 +37,95 @@ We believe that adjusting the tree size and utilizing bagging techniques can imp
 Note: All experiments will use the same training data (\%60 of data set) and testing data (\%40 of data set) to train and evaluate the models.
 \subsection{Experiment 1}
 First, we will look at the effect the size of leaves has on the performance of the Decision Tree Learner.
-To do this, we will train the decision tree model over 60\% of the data using leaf sizes of 1, 2, 3, 5, 10, 20, and 30.
+To do this, we will train the decision tree model over 60\% of the data using leaf sizes between 1 and 30.
 We will then use the Root Mean Squared Error (RMSE) to measure the performance of the model on the remaining 40\% of data and see if overfitting has occurred.
 
 \subsection{Experiment 2}
-Next, we will see if utilizing bagging techniques helps improve the performance and counterac overfitting.
+Next, we will see if utilizing bagging techniques helps improve the performance and counteracts overfitting.
 To achieve this, 30 models (or bags), each trained with a random subset of 60\% of the training data from Experiment 1, will have their predictions averaged to make a final prediction.\
-We will still use the Decision Tree Learner and adjust the leaf sizes to determine the maount of overfitting that is occurring.
+We will still use the Decision Tree Learner and test across a range of leaf sizes to observe the amount of overfitting that is occurring.
 
 \subsection{Experiment 3}
 Finally, we will compare the Decision Tree Learner to the Random Tree Learner.
 Here, we will see if the extra "knowledge" built into the Decision Tree Learner is actually beneficial or just leads to overfitting.
 Once again, both models will be trained on 60\% of the data and tested on the remaining 40\%.
-However, this time their performance will be measured based on their Maximum Error (ME) and Coefficient of Determination (R-squared). % // TODO finish this
+However, this time their performance will be measured based on their Maximum Error (ME) and the Time it takes to train the model. % // TODO finish this
 
 
 \section{Discussion}
 
 \subsection{Experiment 1}
+
+\begin{jdffigure}
+\includegraphics[height=6cm]{Figures/Figure1.png}%
+\captionof{figure}{This figure shows the Root Mean Squared Error (RMSE) of Data Tree Learners trained on leaf sizes ranging from 1 and 30.}\label{fig:flowchart}%
+\end{jdffigure}
+First, we analyzed the performance of the Decision Tree Learner on a range of leaf sizes.
+In \textbf{Figure 1}, we observe that as the leaf size increases, RMSE also increases.
+This is expected as the models with fewer leaves have more potential outcomes and can better fit the data.
+However, we do see signs of overfitting in \textbf{Figure 1} as leaf size decreases below 3.
+Overfitting occurs because the model fits too closely to the training data and can't generalize well on new data.
+It is critical to combat overfitting by not making models more complex than their training data can support (i.e. to not overtrain the models).
+Otherwise, the model will start to perform worse on data that it has not seen before.
+We can recognize overfitting when the in sample error decreases while the out of sample error increases.
+The problem of overfitting can be combatted by averaging predictions from multiple sources, for example by bagging (explored in Experiment 2).
+Alternatively, we can smooth the results of the overfit model by increasing the leaf size, which can be thought of as combining leaves together and averaging.
+The data shown in \textbf{Figure 1} would suggest the optimal leaf size for the decision tree model is 3, where there are enough leaves to give precise answers, but not too many that the model is overfit.
+
 \subsection{Experiment 2}
+\begin{jdffigure}
+\includegraphics[height=6cm]{Figures/Figure2.png}%
+\captionof{figure}{This figure shows the Root Mean Squared Error (RMSE) of a Bag Learner trained on leaf sizes ranging from 1 and 30.}\label{fig:flowchart}%
+\end{jdffigure}
+In the second experiment, we looked at the performance of the Decision Tree learner enhannced with bagging techniques.
+By combining the results of 30 models, we canexpect to  improve the performance of the model and reduce the amount of overfitting.
+The results in \textbf{Figure 2} do show that RMSE of out of sample data with leaf sizes 0-5 was more performant than the Decision Tree Learner in Experiment 1.
+We also see that overfitting does not start until leaf sizes are below 2.
+With a lower optimal leaf size of 2, we can benefit from a more complex model.With a lower optimal leaf size of 2, we can benefit from a more complex model. This suggests that bagging helps to reduce overfitting and allows us to use more complex models without the same risk of overfitting as seen in Experiment 1. The bagging technique averages the predictions from multiple models, which helps to smooth out the errors and reduce the variance. This results in a more robust model that performs better on new data.
+While the data does support the hypothesis that bagging can reduce the amount of overfitting, it is worth noting that it also shows bagging does not eliminate the impact of overfitting.
+We could continue to increase the number of models, but we can always expect some amount of overfitting as the model will never be able to perfectly make predictions on data it hasn't seen before.
+
 \subsection{Experiment 3}
+In the third and final experiment, we compared the performance of the Decision Tree Learner to the Random Tree Learner.
+\begin{jdffigure}
+\includegraphics[height=6cm]{Figures/Figure3.png}%
+\captionof{figure}{This figure shows the Maximum Error from a Decision Tree and Random Tree trained on leaf sizes ranging from 1 and 30.}\label{fig:flowchart}%
+\end{jdffigure}
+First, we will use the Maximum Error (ME) to measure the performance of both models.
+\textbf{Figure 3} shows that w,hile the Decision Tree has a consistently lower ME, there are some leaf sizes (around 13-16) where the Random Tree performed better.
+The Decision Tree also shows less variance in performance across different leaf sizes than the Random Tree.
+It is reasonable to expect the Decision Tree to perform better because it makes more data-informed decisions by calculating correlations where the Random Tree makes random choices.
+The data does show that in this case, the Decision Tree is likely improved enough to be worth the extra computational cost.
+It is worth noting that the benefit of measuring models based solely on ME is very limited.
+This is because it only shows the worst case scenario of the results, and doesn't provide any represenation of how the model performs for all other cases.
+
+Next, we look at the time it took to train the models.
+This could also be looked at as the computational cost of building the models.
+While these models are small enough to be built on a personal laptop, computational cost must be considered for larger enterprise models.
+We expect the Decision Tree to take longer to train because it has to calculate the best split at each node.
+Meanwhile, the Random Tree has the benefit of simply choosing a split and moving on.
+We'd also expect both models to take longer to train as the leaf sizes decreases, because the models have to build more leaves and perform more computations.
+\begin{jdffigure}
+\includegraphics[height=6cm]{Figures/Figure4.png}%
+\captionof{figure}{This figure shows the Time it took to train a Decision Tree and Random Tree trained on leaf sizes ranging from 1 and 30.}\label{fig:flowchart}%
+\end{jdffigure}
+\textbf{Figure 4} confirms our hypotheses by showing that models with smaller leaf sizes took longer to train.
+Additioanlly, the Decision Tree took longer to train than the Random Tree for all leaf sizes.
+
+In Experiment 3, we see that the Decision Tree Learner is more performant based on it's Maximum Error.
+The data suggests that it will give us better results, although it is worth noting the limitations of the ME metric.
+On the other hand, we see that the Time to train the Decision Tree is longer, effectively making this model more expensive.
+This represents a tradeoff that we can expect to find when comparing machine learning models.
+At the end of the day, the best model for a job will depend on the specific use cases and constraints.
 
 \section{Summary}
-
-
-
-
-
-
-
-
-
-\section{Typography}
-All text in JDF should be set in the Palatino typeface. It is available practically everywhere as a system font: Google Docs offers a version 
-called \emph{Palatino Linotype}. It comes in regular and bold weights with matching italics.
-
-\begin{jdffigure}
-\includegraphics[height=0.77cm]{Figures/Handgloves.png} \\
-{\huge Handgloves}%
-\captionof{figure}{Palatino. Make sure the live text (bottom) uses the same font as the image (top).}\label{fig:Palatino}%
-\end{jdffigure}
-% For example in Figure \ref{fig:Palatino} on page \pageref{fig:Palatino}...
-
-\subsection{Body text}
-Body text is set in the regular weight at 11 points with custom line spacing of 1.26, and 8.5 points of spacing added after each paragraph. It should be justified 
-and paragraphs should not be indented. These styles can be automatically applied using the \emph{Normal} paragraph style.
-
-\textbf{Bold} and \textit{italics} should be used for emphasis. Hyperlinks may be inserted in the text, as well as {\tt in-line code}, superscripts\textsuperscript{ like this}, 
-and subscripts\textsubscript{ like this}.
-
-\subsection{Title \& subtitle}
-The paper title should be set in the regular weight at 17 points with 22 points of line spacing, centered at the top of the first page. The title may span up to three lines. 
-For typical assignments, the document title may be as simple as "Assignment 1" More specialized assignments may warrant more unique paper names, like "A Proposal to Create a New Document Format."
-
-The author’s name and email should come next unless you want to or were asked to submit anonymously, in which case this can be omitted. 
-They should be set in the same size and weight as body text, centered. These styles can be applied using the \emph{Title} and \emph{Subtitle} paragraph styles.
-
-\subsection{Abstract}
-If your paper requires an abstract, it should be placed at the top of the first page underneath the title block, preceded by the word \emph{Abstract} in bold italic. 
-An extra 0.5" should be added to both sides. Not all papers require abstracts; only those that would benefit from a high-level summary of the project or its background.
-
-\subsection{Headings}
-Headings should all be set in the same size as body text (11 pt) in bold. With the exception of \emph{Heading 1}, they should all have 8.5 pt of space before and after. 
-They should be hierarchically numbered: Word, Pages, and \LaTeX\ will do this automatically when you use the appropriate paragraph styles, but Google Docs users will need to 
-number their headings manually. Headings should not span more than one line.
-
-\subsubsection{Heading 1}
-\emph{Heading 1} should be set in all caps. It should have 11 points of space added before and 8.5 points of space added after
-
-\subsubsection{Headings 2\,–\,4}
-Besides \emph{Heading 1}, which is set in caps, headings should always use sentence case (i.e., first word capitalized) rather than title case; after all, they are not titles. 
-\emph{Heading 2} should be set in bold roman (upright), and \emph{Heading 3} should be set in bold italics. The use of headings beyond \emph{Heading 3} is discouraged.
-
-\subsubsubsection{Heading 4}
-\emph{Heading 4} is provided as a run-in sidehead. Like \emph{Heading 3}, it is set in bold italics, but it should be followed by an em dash and flow right into the text, 
-as seen at the beginning of the current paragraph. It should be used more as a list style than a heading style, e.g. to set off a list of principles in a heuristic evaluation.
-
-\subsection{Page layout}
-JDF uses the US Letter paper size (8.5" x 11"). It has a top margin of 1", and bottom and side margins of 1.5". This yields a text block of 5.5" x 8.5", which is 
-exactly \(\frac{1}{2}\) the size of the page, divided lengthwise.
-
-The page number should be included in the bottom margin, 1" from the bottom of the page. No other elements should be placed in the margins.
-
-\section{Presentational elements}
-You are encouraged to use presentational elements liberally, as long as they add to the clarity of your submissions. They often require less space and fewer accompanying 
-words to explain a given concept, and do a far better job of it.
-
-\subsection{Figures}
-Figures should always be centered on the page, although they may also take up the entire width and height of the text block. Figures should always be referenced in the text, 
-and they should include a descriptive caption. Figures may also be equations, diagrams, or other kinds of content.
-
-If your figure includes a white background (e.g. an interface design or graph), it may aid legibility to add a \(\frac{1}{4}\)-point black border.
-
-\begin{jdffigure}
-\includegraphics[height=6cm]{Figures/flowchart.png}%
-\captionof{figure}{Make sure your flowcharts are more useful than this one. Source: \href{https://xkcd.com/1195/}{XKCD}.}\label{fig:flowchart}%
-\end{jdffigure}
-
-Figure captions should be placed beneath the corresponding figure, indented 1" on the left and right sides. The label for the figure, e.g. "Figure 1," should 
-be set in bold italics followed by an em dash, and the entire caption should be 8.5 points with 14 points of line spacing. Again, Word and LaTeX will number 
-these automatically using the \emph{Figure Caption} paragraph style, but Docs users will need to number these manually. If need be, you may have one figure caption 
-corresponding to multiple consecutive figures and use either locational descriptors (e.g. "top left," "middle") or labels (e.g. "A", "B") to map parts of the caption 
-to parts of the figure. Make sure that caption falls on the same page as the corresponding figure or table; you may rearrange text to make this work.
-
-In Microsoft Word, you may need to either change the image’s text wrap settings to "Top and Bottom" or change the line spacing of the image to 1.0.
-
-\subsection{Tables}
-You have freedom to format tables in the way that works best for your data. Generally, text should be left-aligned and numbers should be right-aligned or aligned 
-at the decimal – you can do this using a \href{https://practicaltypography.com/tabs-and-tab-stops.html}{custom tab stop}. The default table style (shown below) 
-reduces the text size to be equal to the caption text.
-
-Table captions should be formatted the same way as figure captions, but they should be placed above the table. The popular mnemonic for this is: figures at the 
-foot, tables at the top. Like figures, tables should not exceed the margins and should be centered on the page.
-
-\begin{jdftable}
-\captionof{table}{Mathematical constants. Notice how the approximations align at the decimal.}\label{table:Example}
-\small % Reduce font size
-\begin{tabular}{@{} L{0.15\linewidth} c S L{0.52\linewidth}}
-	\textbf{Name} & \textbf{Symbol} & \textbf{Approximation} & \textbf{Description} \\
-	\toprule[0.5pt]
-	Golden ratio & $\phi$ & 1.618 & Number such that the ratio of " to the number is equal to the ratio of its reciprocal to 1\\
-	\midrule
-	Euler's number & $e$ & 2.71828 & Exponential growth constant\\
-	\midrule
-	Archimedes' constant & $\pi$ & 3.14 & The ratio between circumference and diameter of a circle\\
-	\midrule
-	One hundred & A+ & 100.00 & The grade we hope you’ll all earn in this class\\
-\end{tabular}
-\end{jdftable}
-
-\subsection{Additional elements}
-There are additional elements you may want to include in your paper, such as in-line or block quotes, lists, and more. For other content types not covered here, 
-you have flexibility in determining how it should be used in this format.
-
-\subsubsection{Quotes}
-If you would like to quote an outside source, you may do so with quotation marks followed by a citation. If a quote is fewer than three lines, you may write it 
-in-line. It is acceptable to replace pronouns with their target in brackets for clarity. For example, "Heavy use of peer grading would compromise [the school’s] 
-reputation" \citep{joyner2016}. If a quote exceeds three lines, you should set it as its own paragraph with 0.5" side margins, using the \emph{Blockquote} style.
-
-\begin{quotation}
-"Whether or not the grades generated by peers are reliably similar to grades generated by experts is only one factor worth considering, however. Student perception 
-is also an important factor. A recent study indicated that reliance on peer grading is one of the top drivers of high MOOC dropout rates. This problem may be 
-addressed by reintroducing some expert grading where possible." \citep{joyner2016}
-\end{quotation}
-
-\subsubsection{Lists}
-Bulleted and numbered lists are indented 0.5" from the left margin, with the bullet or number hanging in the margin by 0.25" (the default format).
-
-Bullet points:
-
-\begin{itemize}
-	\item First bullet point item
-	\item Second bullet point item
-\end{itemize}
-
-Numbered list:
-
-\begin{enumerate}
-	\item First numbered item
-	\item Second numbered item
-\end{enumerate}
-
-\section{Procedural elements}
-\subsection{In-line citations}
-Articles or sources to which you refer should be cited in-line with the authors’ names and the year of publication.\footnote{In-line citations are preferred over footnotes, 
-and we favor APA citation format for both in-line citations and reference lists. Refer to the 
-\href{https://owl.purdue.edu/owl/research_and_citation/apa_style/apa_formatting_and_style_guide/in_text_citations_the_basics.html}{Purdue Online Writing Lab}, or 
-follow the above examples. Footnotes should use 8.5 point text with 1.26 line spacing.} The citation should be placed close in the text to the actual claim, not merely 
-at the end of the paragraph. For example: students in the OMSCS program are older and more likely to be employed than students in the on-campus program \citep{joyner2017}. 
-In the event of multiple authors, list them. For example: research finds sentiment analysis of the text of OMSCS reviews corresponds to student-assigned ratings of the 
-course \citep{newman2018}. You may also cite multiple studies together. For example: several studies have found students in the online version of an undergraduate CS1 class 
-performed equally with students in a traditional version (\cite{joyner2018a}; \cite{joyner2018b}). If you would like to refer to an author in text, you may also do so by 
-including the year (in parentheses) after the author’s name in the text. If a publication has more than 4 authors, you may list the first author followed by ‘et al.’ For 
-example: \citeinl{joyner2016} claim that a round of peer review prior to grading may improve graders’ efficiency and the quality of feedback given. This applies to parenthetical 
-citations as well, e.g. \citep{joyner2016}.
-
-\subsection{Reference lists}
-References should be placed at the end of the paper in a dedicated section. Reference lists should be numbered and organized alphabetically by first author’s last name. If 
-multiple papers have the same author(s) and year, you may append a letter to the end of the year to allow differentiated in-line text (e.g. Joyner, 2018a and Joyner, 2018b 
-in the section above). If multiple papers have the same author(s), list them in chronological order starting with the older paper. Only works that are cited in-line should be 
-included in the reference list. The reference list does not count against the length requirements.
-
-\section{References}
-\printbibliography[heading=none]
-
-\section{Appendices}
-You may optionally move certain information to appendices at the end of your paper, after the reference list. If you have multiple appendices, you should create a section 
-with a \emph{Heading 1} of "Appendices." Each appendix should begin with a descriptive \emph{Heading 2}; appendices can thus be referenced in the body text using their 
-heading number and description, e.g. "Appendix 5.1: Survey responses." If you have only one appendix, you can label it with the word "Appendix" followed by a descriptive 
-title, e.g., "Appendix: Survey responses."
-
-These appendices do not count against the page limit, but they should not contain any information required to answer the question in full. The body text should be sufficient 
-to answer the question, and the appendices should be included only for you to reference or to give additional context. If you decide to move content to an appendix, be sure 
-to summarize the content and note it in relevant place in the body text, e.g., "The raw data can be viewed in \emph{Appendix 5.1: Survey responses}."
+In these experiments, we used a few different models to explore some of the tradeoffs that come with building machine learning models.
+We first looked at overfitting and how different leaf sizes can impact it's effect on a Decision Tree.
+We also explored how bagging techniques can help mitigate this impact and increase performance.
+Finally, we compared the performance of a Decision Tree to a Random Tree and explored the tradeoffs between performance and cost.
+While we found the Decision Tree to be more performant (at least based on Maximum Error), it is also more expensive to train.
+Overall, we can see that there are many tradeoffs that msut be considered when building machine learning models.
+Problems such as overfitting and cost mean that models cannot always be improved by simply training longer.
+However, by analyzing results of test data, we can make informed decisions to cobat overfitting and optimize our models based on the metrics we deem to be most important.
 
 \end{document}
