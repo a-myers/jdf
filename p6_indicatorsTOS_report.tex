@@ -40,12 +40,14 @@ A simple implementation would be to buy when the price is below 95% * SMA, and s
 
 
 \subsection{Relative Strength Index (RSI)}
-THe Relative Strength Index (RSI) is an indicator used to measure momentum of an asset's price. 
+The Relative Strength Index (RSI) is an indicator used to measure the speeds and chinges of an asset's price movements. 
+It does this by comparing the size of recent gains to recent losses.
 It uses a lookback period similar to SMA, so we start by retrieving price data earlier than the start date in the same way as described in 1.1.
 Once we have the pricing data, we calculate the pricing difference of each day from the previous day. 
 We can then separate the "gains" from the "losses" based on whether that difference was positive or negative.
 Once we have the gains and losses, we calculate the averages for each of them over the lookback period N.
 Finally, we can calculate the RSI for each day using the formula: RSI = 100 - (100 / (1 + (average gain / average loss))).
+A value of 70 or above is generally considered overbought, and a value of 30 or below is generally considered oversold.
 Similar to SMA in 1.1, we are choosing to leave 'NaN' on non-trading days instead of forward filling.
 
 RSI can be useful in trading strategies to help identify conditions where the asset is overbought or oversold.
@@ -54,11 +56,39 @@ To do this, they could buy when the RSI is below 30 (signalling oversold) and pr
 The opposite would be to sell when the RSI is above 70 (signalling overbought) and price crosses below the SMA.
 
 
-\subsection{Indicator 3}
+\subsection{Rate of Change (ROC)}
+The Rate of Change (ROC) indicator is used to measure the percentage change in price between the current price and the price N days ago.
+It can be used by analysts to measure how quickly the price of an asset is changing.
+To calculate the ROC, we first retrieve the pricing data for the asset in the same way as described in 1.1, with N + 30 extra days.
+Once we have the data, we can calculate the ROC for each day using the formula: ROC = ((price - price\_N\_periods\_ago) / price\_N\_periods\_ago) * 100.
+As we have done with the past indicators, we choose to remove 'NaN' during calculation and add them back in after the calculation is complete.
 
-\subsection{Indicator 4}
+An analyst could choose to use ROC to signal strong trends in the asset's price. 
+They may hypothesize that high ROC signals strong upward momentum, and low ROC signals strong downward momentum.
+They could create a strategy that buys the asset when the ROC is above 10%, and sells when the ROC is below 10%.
 
-\subsection{Indicator 5}
+
+\subsection{Percentage Price Oscillator (PPO)}
+The Percentage Price Oscillator (PPO) is a momentum indicator that measures the difference between two moving averages. It is expressed as a percentage of the larger moving average.
+To calcualte the PPO, we first need to choose two periods, one long and one short. We can then calculate the SMA of the asset's price over each of these periods using the SMA indicator from 1.1.
+Once we have the two SMAs, we can calculate the PPO using the formula: PPO = 100 * (short\_SMA - long\_SMA) / long\_SMA.
+
+PPO can be used to identify the momentum or trends of an asset's price. A positive PPO indicates that the short-term moving average is above the long-term moving average, which could be a bullish signal.
+Alternatively, a negative PPO could signal a downtrend and be a bearish signal. An analyst could use PPO to identify when the momentum of an asset is changing, and use this to inform their trading strategy.
+A simple strategy could be to buy when the PPO becomes positive and sell when the PPO becomes negative.
+
+\subsection{Fast Stochastic Oscillator (\%K)}
+The Fast Stochastic Oscillator is a momentum indicator that compares the closing price of an asset to its price range over a specified period.
+It is expressed as a percentage called \%K, and can be used to determine where a price is relative to its recent trading range.
+We calculate this indicator by first retrieving the pricing data for the asset, again using N + 30 extra days as described in 1.1 to ensure we avoid 'NaN' values caused by the lookback period.
+For each day, we then calculate the highest and lowest prices over the past N days.
+Finally, we can calculate the \%K for each day using the formula: \%K = 100 * ((price - lowest\_price) / (highest\_price - lowest\_price)).
+As with the other indicators, we choose to remove 'NaN' during calculation and add them back in after the calculation is complete.
+
+An analyst could use this indicator as part of a strategy based on the hypothesis that during upward trends, the asset price will tend close relatively high.
+Alternatively, during downward trends, the asset price will tend to close relatively low. These trends could be determined using PPO described in 1.4.
+They could choose to buy the stock when %\K is below 25\% and PPO is positive with the idea that over time %\K will return to a higher value due to the upward trend.
+The opposite would be to sell when %\K is above 75\% and PPO is negative, signalling a downtrend.
 
 \section{Technically Optimal Strategy}
 
