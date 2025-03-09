@@ -87,11 +87,26 @@ As with the other indicators, we choose to remove 'NaN' during calculation and a
 
 An analyst could use this indicator as part of a strategy based on the hypothesis that during upward trends, the asset price will tend close relatively high.
 Alternatively, during downward trends, the asset price will tend to close relatively low. These trends could be determined using PPO described in 1.4.
-They could choose to buy the stock when %\K is below 25\% and PPO is positive with the idea that over time %\K will return to a higher value due to the upward trend.
-The opposite would be to sell when %\K is above 75\% and PPO is negative, signalling a downtrend.
+They could choose to buy the stock when \%K is below 25\% and PPO is positive with the idea that over time \%K will return to a higher value due to the upward trend.
+The opposite would be to sell when \%K is above 75\% and PPO is negative, signalling a downtrend.
 
-\section{Technically Optimal Strategy}
+\section{Theoretically Optimal Strategy}
+In order to provide a benchmark to compare our indicators against, we implement an "optimal" strategy.
+This strategy does have the ability to look into the future before choosing to BUY or SELL. 
+However, it is constrained in that it's only allowable positions are +1000, 0, and -1000 shares.
+We will initiate the benchmark with \$100,000, use "JPM" as the stock symbol, and use the time period January 1, 2008, to December 31, 2009
+We also assue commsision and impact are 0.
 
+At a high level, the strategy simply buys as many shares as possible when the price will go up, and sells as many shares as possible when the price will go down.
+To implement the strategy, we iterate through each day and find that days price as well as the next days price.
+If the next days price is higher than the current days price, we move a position of 1000 shares (if not there already).
+If the next days price is lower than the current days price, we move a position of -1000 shares (if not there already).
+For each of these buy/sell cases, we update our cash total by subtracting the price of the shares bought/sold.
+In order to return the results in the form of an order list, each position movement is added to the list as a "BUY" or "SELL" order.
+
+// TODO charts
+
+\section{delete this}
 All text in JDF should be set in the Palatino typeface. It is available practically everywhere as a system font: Google Docs offers a version 
 called \emph{Palatino Linotype}. It comes in regular and bold weights with matching italics.
 
