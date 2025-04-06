@@ -179,7 +179,27 @@ We did not find dyna hallucinations to be helpful.
 We will compare the performance of our Q-Learner to the Manual Strategy in Experiment 1 below.
 
 \section{Experiment 1}
-TODO
+\subsection{Training Period}
+In Experiment 1, we compare our Manual Strategy to our Strategy Learner over the in-sample period of Jan 1, 2008 to Dec 31, 2009.
+
+Figure 3 shows the performance of our Manual Strategy and the Strategy Learner alongside our Benchmark Portfolio which holds 1000 shares.
+As we hypothesized, the Strategy Learner outperforms the Manual Strategy by a signifcant margin with profit of ~42\% compared to ~10\%.
+The Manual Strategy beats the Benchmark Portfolio, which sees hardly any profit.
+While we are not suprised that the Strategy Learner beats the Manual Strategy which beats the Benchmark, it is interesting to see how well the Strategy Learner is able to perform.
+It is worth noting, however, that the Strategy Learner is at high risk of overfitting it's model to the in-sammple-data that it trained on.
+Therefore, we should expect that the model does not perform as well when we look at out-of-sample data.
+
+\subsection{Testing Period}
+To see if the Strategy Learner can actually be profitable, we must test it against out-of-sample data as well.
+
+Figure 4 shows that once again the Strategy Learner performs best, followed by the Manual Strategy, and finally the Benchmark Portfolio.
+In this case, the Strategy Learner only makes a profit of ~10\% over the 2 year period, while the Manual Strategy makes a profit of ~5\%.
+Both of these strategies are winning for the investor, and especially beat out the Benchmark Portfolio which ends with an ~8\% loss.
+
+In general, we'd expect that the Strategy Learner would perform best over most periods of data.
+The Strategy Learner is able to be more adaptable to our indicators than the Manual Strategy, and can learn over thousands of quick iterations instead of having an oeprator manually tuning every parameter.
+However, with the unpredictable nature of the stock marker, we are also sure that we can find time periods where our strategies don't perform as well.
+In order to ensure a strategy can remain positive in the future, it would be valuable to test across many different time periods (this is an opportunity for future follow-up).
 
 \section{Experiment 2}
 TODO
