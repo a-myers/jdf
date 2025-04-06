@@ -50,7 +50,7 @@ Then, we divide that value by the long-term moving average and multiply it by 10
 We can tune the PPO by changing the short-term and long-term moving average periods.
 In general, positive PPO values indicate that the short-term moving average is above the long-term moving average, which may indicate positive momentum.
 For both the Manual Strategy and the Strategy Learner, we found that a short-term period of 5 days and a long-term period of 25 days worked well.
-We used the thresholds of 2.0 and -2.0 to make decisions in our Manual Strategy.
+We used the thresholds of -2.0 and 2.0 to make buy and sell decisions in our Manual Strategy.
 
 \subsection{Rate Of Change (ROC)}
 Rate of Change (ROC) is also a momentum indicator.
@@ -60,7 +60,7 @@ Then, we divide that value by the  n-day-old price price and multiply it by 100 
 If ROC is positive, it means the stock price has increased over the period, which could indicate positive momentum.
 ROC may also indicate changes in trend directions when it crosses the zero line.
 For both the Manual Strategy and the Strategy Learner, we found that a period of 30 days worked well.
-We used the thresholds of 2.0 and -2.0 to make decisions in our Manual Strategy.
+We used the thresholds of -2.0 and 2.0 to make buy and sell decisions in our Manual Strategy.
 
 \subsection{Fast Stochastic Oscillator (\%K)}
 The Fast Stochastic Oscillator, or \%K, is a momentum indicator that compares a stock's closing price to it's high and low prices for each day over some time.
@@ -70,10 +70,65 @@ Finally, we multiply that value by 100 to get a percentage.
 The logic behind this indicator is that when a stock is overbought, it will be trading near its high price, and when it is oversold, it will be trading near its low price.
 Therefore, a Fast Stochastic value of 80\% or higher is often used to signal that a stock is overbought, while a value of 20\% or lower is often used to signal that a stock is oversold.
 For both the Manual Strategy and the Strategy Learner, we found that a period of 30 days worked well.
-We used the thresholds of 80\% and 20\% to make decisions in our Manual Strategy.
+We used the thresholds of 20\% and 80\% to make buy and sell decisions in our Manual Strategy.
 
 \section{Manual Strategy}
-TODO
+\subsection{Description}
+We combined the indicators PPO, ROC, and \%K to create a manual strategy.
+The logic of the strategy is to look for periods where both PPO and ROC agree on the trend of a stock price.
+Then, we look for the \%K indicator to decide when to buy or sell, based on whether the stock is overbought or oversold.
+We believe by relying on all there signals to agree before making any orders, we can effectively make profitiable trades.
+
+In particular, we buy when:
+\begin{itemize}
+	\item PPO > -2.0
+	\item ROC > -2.0
+	\item and \%K < 20\%
+\end{itemize}
+
+We sell when:
+\begin{itemize}
+	\item PPO < 2.0
+	\item ROC < 2.0
+	\item and \%K > 80\%
+\end{itemize}
+
+\subsection{Comparison and Evaluation}
+
+\begin{jdffigure}
+\includegraphics[height=6cm]{Project8Figures/Figure1.png}%
+\captionof{figure}{Manual Strategy vs Benchmark Strategy during in-sample period of 2008-209. Both portfolio values are normalized to 1. Blue vertical lines indicate LONG entrypoints, and Black lines indicate SHORT entrypoints.}\label{fig:figure1}%
+\end{jdffigure}
+	
+Figure 1 shows the performance of our Manual Strategy when trading JPM during the in-sample period of Jan 1, 2008 to Dec 31, 2009.
+We compare this strategy to a Benchmark Portfolio, which buys 1000 JPM shares on the first trading day and holds.
+As we expected, our strategy outperforms the Benchmark Portfolio by a considerable margin.
+There were only about 2 months over the 24 month period where the Benchmark Portfolio was more valuable.
+One interesting thing to note is that the Manual Strategy value remained flat during the period where the Benchmark Strategy saw the largest dip.
+Over this period, the Manual Strategy remained profitable by only holding cash. 
+This was a winning strategy during the in-sample period.
+
+Of course, it is expected that our Manual Strategy performs better during the in-sample period as that is the data we used to tune the strategy.
+In particular, we tuned the lookback periods and thresholds until we found a strategy that is profitable for the in-sample period.
+However, we will next look at the performance of our strategy during the out-of-sample period of Jan 1, 2010 to Dec 31, 2011.
+
+\begin{jdffigure}
+\includegraphics[height=6cm]{Project8Figures/Figure2.png}%
+\captionof{figure}{Manual Strategy vs Benchmark Strategy during out-of-sample period of 2010-2011. Both portfolio values are normalized to 1. Blue vertical lines indicate LONG entrypoints, and Black lines indicate SHORT entrypoints.}\label{fig:figure1}%
+\end{jdffigure}
+
+Figure 2 shows that once again, the Manual Strategy outperforms the Benchmark Portfolio.
+In fact, while the Benchmark Portfolio drops almost 10\% by the out-of-sample period, the Manual Strategy manages to walk away with an overall profit above 5\%.
+However, the Manual Strategy did spend more months with a value below that of the Benchmark Portfolio.
+In this case, it was about 6 months where the Benchmark Portfolio was worth more.
+Once again though, we see that the Manual Strategy only held cash at times when the Benchmark Portfolio dropped to it's lowest value.
+
+Looking at these results, it may be easy to assume that the Manual Strategy is a good strategy, as the out-of-sample results outperformed even the in-sample-results.
+Again, this is not expected as we tuned the strategy to perform well on the in-sample data while being blind to out-of-sample data.
+Looking closely between both Figures 1 and 2 though, we see that the in-sample results look more consistent and stable than the out-of-sample results.
+It seems like the in-sample-results would be profitable whenever the time period ended, whereas the out-of-sample results seemed to get lucky by being profitable right at the end of the period.
+However, it is certainly promising that the Manual Strategy is also profitable during the out-of-sample period.
+
 
 \section{Strategy Learner}
 TODO
