@@ -131,7 +131,57 @@ However, it is certainly promising that the Manual Strategy is also profitable d
 
 
 \section{Strategy Learner}
-TODO
+In order to see if we can build a better strategy than the Manual Strategy, we decided to use a Q-Learner to build our Strategy Learner.
+The Q-Learner is a reinforcement learning algorithm that takes a discrete state space as input.
+It emits 3 possible actions: buy, sell, or hold.
+During training, we iterate over the Q-Learner's state and suggested actions to see if they are profitable.
+We measure a value called "reward" based on how profitable the action was.
+This reward gets fed back into the Q-Learner to update the Q-values for every possible state that it sees.
+
+In order to train our Q-Learner, we first needed to descretize our inputs, PPO, ROC, and \%K.
+For PPO, we assign a discrete value 0-4 based on which bin the indicator falls into:
+\begin{itemize}
+	\item < -2.0
+	\item -2.0 to -0.5
+	\item -0.5 to 0.5
+	\item 0.5 to 2.0
+	\item > 2.0
+\end{itemize}
+
+For ROC, we also assign a value 0-4 based on 5 bins:
+\begin{itemize}
+	\item < -10.0
+	\item -10.0 to -2.0
+	\item -2.0 to 2.0
+	\item 2.0 to 10.0
+	\item > 10.0
+\end{itemize}
+
+Lastly, for \%K, we assign a value 0-3 based on 4 bins:
+\begin{itemize}
+	\item 0 to 25.0
+	\item 25.0 to 50.0
+	\item 50.0 to 75.0
+	\item 75.0 to 100.0
+\end{itemize}
+
+After finding the 3 correct buckets for a given day, we calculate a discrete state using the formula: \[state = (roc_bin * 20) + (ppo_bin * 4) + percentk_bin \]
+
+Next, we developed a reward function for the Q-Learner.
+We calculated our reward by looking forward by 3 days to see if the action we took will be profitable or not.
+This profit calculation takes into account the commission and impact of the trade.
+By rewarding the Q-Learner when we notice profitable trades, we hope it will learn to coninue that pattern in the future.
+Unprofitable trades similarly are penalized with a negative reward equal to the losses we project by looking forward 3 days.
+Lastly, we set the reward function to penalize the Q-Learner with a reward of -30 when it decides to HOLD.
+We found that the parameters already placed on our learners (that it can only hold positions -1000, 0, and 1000) made it difficult for the learner to make too many trades even if it sends many signals.
+With these boundaries in place, we figured it best to incentivize our learner to send as many BUY and SELL signals as possible.
+
+With a discretized state space and a reward function, we were finally able to train our model over in-sample data.
+While training the Strategy Learner over the in-sample data, we manually tuned the parameters of the Q-Learner to find what produced the best results.
+We found the best results with a learning rate (alpha) of 0.15, a discount factor (gamma) of 0.85, a random action rate (rar) of 0.5, and a random action decay (rard) of 0.999.
+We did not find dyna hallucinations to be helpful.
+
+We will compare the performance of our Q-Learner to the Manual Strategy in Experiment 1 below.
 
 \section{Experiment 1}
 TODO
