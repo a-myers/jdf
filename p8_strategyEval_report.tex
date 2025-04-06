@@ -42,7 +42,35 @@ We hypothesize that a higher impact will cause our strategy portfolio to make le
 We will test this by running our strategy learner with varying impact values.
 
 \section{Indicator Overview}
-TODO
+\subsection{Percentage Price Oscillator (PPO)}
+Percentage Price Oscillator (PPO) is a momentum indicator that shows the relationship between the short-term and long-term moving averages of stock's price.
+To calculate it, we first subtract the long-term moving average from the short-term moving average.
+Then, we divide that value by the long-term moving average and multiply it by 100 to get a percentage.
+
+We can tune the PPO by changing the short-term and long-term moving average periods.
+In general, positive PPO values indicate that the short-term moving average is above the long-term moving average, which may indicate positive momentum.
+For both the Manual Strategy and the Strategy Learner, we found that a short-term period of 5 days and a long-term period of 25 days worked well.
+We used the thresholds of 2.0 and -2.0 to make decisions in our Manual Strategy.
+
+\subsection{Rate Of Change (ROC)}
+Rate of Change (ROC) is also a momentum indicator.
+This indicator shows how the price of a stock has changed over a certain period of time in order to identify trends.
+We calculate ROC for a stock by taking the current closing price and subtracting the closing price from n days ago.
+Then, we divide that value by the  n-day-old price price and multiply it by 100 to get a percentage.
+If ROC is positive, it means the stock price has increased over the period, which could indicate positive momentum.
+ROC may also indicate changes in trend directions when it crosses the zero line.
+For both the Manual Strategy and the Strategy Learner, we found that a period of 30 days worked well.
+We used the thresholds of 2.0 and -2.0 to make decisions in our Manual Strategy.
+
+\subsection{Fast Stochastic Oscillator (\%K)}
+The Fast Stochastic Oscillator, or \%K, is a momentum indicator that compares a stock's closing price to it's high and low prices for each day over some time.
+We calculate \%K by first finding the highest and lowest prices seen over the last n days.
+Then, we subtract the lowest price seen from the current closing price, and divide that product by the difference between the highest and lowest prices.
+Finally, we multiply that value by 100 to get a percentage.
+The logic behind this indicator is that when a stock is overbought, it will be trading near its high price, and when it is oversold, it will be trading near its low price.
+Therefore, a Fast Stochastic value of 80\% or higher is often used to signal that a stock is overbought, while a value of 20\% or lower is often used to signal that a stock is oversold.
+For both the Manual Strategy and the Strategy Learner, we found that a period of 30 days worked well.
+We used the thresholds of 80\% and 20\% to make decisions in our Manual Strategy.
 
 \section{Manual Strategy}
 TODO
