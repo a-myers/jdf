@@ -72,7 +72,7 @@ We used the thresholds of 20\% and 80\% to make buy and sell decisions in our Ma
 We combined the indicators PPO, ROC, and \%K to create a manual strategy.
 The logic of the strategy is to look for periods where both PPO and ROC agree on the trend of a stock price.
 Then, we look for the \%K indicator to decide when to buy or sell, based on whether the stock is overbought or oversold.
-We believe by relying on all there signals to agree before making any orders, we can effectively make profitiable trades.
+We believe by relying on all three signals to agree before making any orders, we can effectively make profitiable trades.
 
 In particular, we buy when:
 \begin{itemize}
@@ -95,7 +95,7 @@ We sell when:
 \captionof{figure}{Manual Strategy vs Benchmark Strategy during in-sample period of 2008-2009. Both portfolio values are normalized to 1. Blue vertical lines indicate LONG entrypoints, and Black lines indicate SHORT entrypoints.}\label{fig:figure}%
 \end{jdffigure}
 	
-Figure 1 shows the performance of our Manual Strategy when trading JPM during the in-sample period of Jan 1, 2008 to Dec 31, 2009.
+\textbf{Figure 1} shows the performance of our Manual Strategy when trading JPM during the in-sample period of Jan 1, 2008 to Dec 31, 2009.
 We compare this strategy to a Benchmark Portfolio, which buys 1000 JPM shares on the first trading day and holds.
 As we expected, our strategy outperforms the Benchmark Portfolio by a considerable margin.
 There were only about 2 months over the 24 month period where the Benchmark Portfolio was more valuable.
@@ -104,7 +104,7 @@ Over this period, the Manual Strategy remained profitable by only holding cash.
 This was a winning strategy during the in-sample period.
 
 Of course, it is expected that our Manual Strategy performs better during the in-sample period as that is the data we used to tune the strategy.
-In particular, we tuned the lookback periods and thresholds until we found a strategy that is profitable for the in-sample period.
+In particular, we tuned the lookback periods and thresholds until we found a strategy that is profitable for the in-sample period (exact values are available under \textbf{2. Indicator Overview}). 
 However, we will next look at the performance of our strategy during the out-of-sample period of Jan 1, 2010 to Dec 31, 2011.
 
 \begin{jdffigure}
@@ -112,7 +112,7 @@ However, we will next look at the performance of our strategy during the out-of-
 \captionof{figure}{Manual Strategy vs Benchmark Strategy during out-of-sample period of 2010-2011. Both portfolio values are normalized to 1. Blue vertical lines indicate LONG entrypoints, and Black lines indicate SHORT entrypoints.}\label{fig:figure}%
 \end{jdffigure}
 
-Figure 2 shows that once again, the Manual Strategy outperforms the Benchmark Portfolio.
+\textbf{Figure 2} shows that once again, the Manual Strategy outperforms the Benchmark Portfolio.
 In fact, while the Benchmark Portfolio drops almost 10\% by the out-of-sample period, the Manual Strategy manages to walk away with an overall profit above 5\%.
 However, the Manual Strategy did spend more months with a value below that of the Benchmark Portfolio.
 In this case, it was about 6 months where the Benchmark Portfolio was worth more.
@@ -120,21 +120,30 @@ Once again though, we see that the Manual Strategy only held cash at times when 
 
 Looking at these results, it may be easy to assume that the Manual Strategy is a good strategy, as the out-of-sample results outperformed even the in-sample-results.
 Again, this is not expected as we tuned the strategy to perform well on the in-sample data while being blind to out-of-sample data.
-Looking closely between both Figures 1 and 2 though, we see that the in-sample results look more consistent and stable than the out-of-sample results.
+However, looking closely between both Figures 1 and 2, we see that the in-sample results look more consistent and stable than the out-of-sample results.
 It seems like the in-sample-results would be profitable whenever the time period ended, whereas the out-of-sample results seemed to get lucky by being profitable right at the end of the period.
-However, it is certainly promising that the Manual Strategy is also profitable during the out-of-sample period.
+That being said, it is certainly promising that the Manual Strategy is also profitable during the out-of-sample period.
 
 
 \section{Strategy Learner}
-In order to see if we can build a better strategy than the Manual Strategy, we decided to use a Q-Learner to build our Strategy Learner.
+\subsection{High-Level Overview}
+In order to see if we can build a better strategy than the Manual Strategy, we decided to use a Q-Learner.
 The Q-Learner is a reinforcement learning algorithm that takes a discrete state space as input.
-It emits 3 possible actions: buy, sell, or hold.
-During training, we iterate over the Q-Learner's state and suggested actions to see if they are profitable.
-We measure a value called "reward" based on how profitable the action was.
-This reward gets fed back into the Q-Learner to update the Q-values for every possible state that it sees.
+Based on these inputs, it is configured to return an action. 
+In our case, the action can be one of 3 possible values: BUY, SELL, or HOLD.
+A reward function is used to teach the Q-Learner which actions are best for which state.
 
+To train our learner to make profitable trading decisions, we iterate through a period of historical dates and see what 'state' descrbed our indicators (PPO, ROC, and \%K) on that date. 
+(Details about how to calculate state are below)
+That 'state' is then submitted to the Q-Learner to get a suggested action.
+We can calculate how profitable that action was by comparing to a price from a future date.
+This profitability is used as our "reward".
+This reward gets fed back into the Q-Learner and enables our algorithm to learn.
+After running for some time, the Q-Learner will have learned to associate a "best" action for all of the possible states that it can encounter.
+
+\subsection{Technical Details}
 In order to train our Q-Learner, we first needed to descretize our inputs, PPO, ROC, and \%K.
-For PPO, we assign a discrete value 0-4 based on which bin the indicator falls into:
+For PPO, we assign a discrete value 0-4 based on which bin the indicator falls into on a given day:
 \begin{itemize}
 	\item < -2.0, -2.0 to -0.5, -0.5 to 0.5, 0.5 to 2.0, and > 2.0
 \end{itemize}
@@ -154,12 +163,13 @@ There are 100 possible state combinations (5 * 5 * 4 = 100).
 
 Next, we developed a reward function for the Q-Learner.
 We calculated our reward by looking forward by 3 days to see if the action we took will be profitable or not.
-This profit calculation takes into account the commission and impact of the trade.
+This profit calculation takes into account the commission and impact of the trade. 
+(Commission = 9.95 and Impact = 0.005, except in \textbf{Experiment 2})
 By rewarding the Q-Learner when we notice profitable trades, we hope it will learn to coninue that pattern in the future.
-Unprofitable trades similarly are penalized with a negative reward equal to the losses we project by looking forward 3 days.
+Similarly, unprofitable trades are penalized with a negative reward equal to the losses we project by looking forward 3 days.
 Lastly, we set the reward function to penalize the Q-Learner with a reward of -30 when it decides to HOLD.
-We found that the parameters already placed on our learners (that it can only hold positions -1000, 0, and 1000) made it difficult for the learner to make too many trades even if it sends many signals.
-With these boundaries in place, we figured it best to incentivize our learner to send as many BUY and SELL signals as possible.
+This is because we found that the boundaries already placed on our learners (Project 8 specifies the learner may only hold positions -1000, 0, and 1000 at a given time) made it difficult for the learner to make too many trades, even when there are many trade signals.
+With these boundaries in place, we figured it best to incentivize our learner to send more BUY and SELL signals, rather than being more conservative and holding.
 
 With a discretized state space and a reward function, we were finally able to train our model over in-sample data.
 While training the Strategy Learner over the in-sample data, we manually tuned the parameters of the Q-Learner to find what produced the best results.
@@ -177,27 +187,29 @@ In Experiment 1, we compare our Manual Strategy to our Strategy Learner over the
 \captionof{figure}{Strategy Learner vs. Manual Strategy vs Benchmark Strategy during in-sample period of 2008-2009. Both portfolio values are normalized to 1.}\label{fig:figure}%
 \end{jdffigure}
 
-Figure 3 shows the performance of our Manual Strategy and the Strategy Learner alongside our Benchmark Portfolio which holds 1000 shares.
+\textbf{Figure 3} shows the performance of our Manual Strategy and the Strategy Learner alongside our Benchmark Portfolio which holds 1000 shares.
 As we hypothesized, the Strategy Learner outperforms the Manual Strategy by a signifcant margin with profit of ~42\% compared to ~10\%.
 The Manual Strategy beats the Benchmark Portfolio, which sees hardly any profit.
 While we are not suprised that the Strategy Learner beats the Manual Strategy which beats the Benchmark, it is interesting to see how well the Strategy Learner is able to perform.
-It is worth noting, however, that the Strategy Learner is at high risk of overfitting it's model to the in-sammple-data that it trained on.
+It is worth noting, however, that the Strategy Learner is at high risk of overfitting it's model to the in-sample-data that it trained on.
 Therefore, we should expect that the model does not perform as well when we look at out-of-sample data.
 
 \subsection{Testing Period}
-To see if the Strategy Learner can actually be profitable, we must test it against out-of-sample data as well.
+To see if the Strategy Learner can actually be profitable, we must test it against out-of-sample data as well. 
+This out-of-sample data is from a period of time that was not used to help train the learner, and simulates potential "future" results.
 
 \begin{jdffigure}
 \includegraphics[height=6cm]{Project8Figures/Figure4.png}%
 \captionof{figure}{Strategy Learner vs. Manual Strategy vs Benchmark Strategy during out-of-sample period of 2010-2011. Both portfolio values are normalized to 1.}\label{fig:figure}%
 \end{jdffigure}
 
-Figure 4 shows that once again the Strategy Learner performs best, followed by the Manual Strategy, and finally the Benchmark Portfolio.
+\textbf{Figure 4} shows that during the out-of-sample period, the Strategy Learner again performs best, followed by the Manual Strategy, and finally the Benchmark Portfolio.
 In this case, the Strategy Learner only makes a profit of ~10\% over the 2 year period, while the Manual Strategy makes a profit of ~5\%.
 Both of these strategies are winning for the investor, and especially beat out the Benchmark Portfolio which ends with an ~8\% loss.
 
 In general, we'd expect that the Strategy Learner would perform best over most periods of data.
-The Strategy Learner is able to be more adaptable to our indicators than the Manual Strategy, and can learn over thousands of quick iterations instead of having an oeprator manually tuning every parameter.
+The Strategy Learner more adaptable to our indicators than we can be when tuning our Manual Strategy.
+The Q-Learner can also learn over thousands of quick iterations instead of having an operator manually testing different paramters.
 However, with the unpredictable nature of the stock marker, we are also sure that we can find time periods where our strategies don't perform as well.
 In order to ensure a strategy can remain positive in the future, it would be valuable to test across many different time periods (this is an opportunity for future follow-up).
 
@@ -213,13 +225,15 @@ This leads to higher costs that must be overcome to make profitable trades.
 For this reason, we expect the Strategy Learner to make less trades overall when it has a higher impact.
 The additional cost of trading also eats away slightly at profits, and slightly adds to the risk of each trade. 
 For this reason, we expect the sharpe ratio to be lower when the impact is higher.
+In this experiment, we test possible impact values of 0.001, 0.005, and 0.01.
+Commission will be set to \$0 for this experiment.
 
 \begin{jdffigure}
 \includegraphics[height=6cm]{Project8Figures/Figure5.png}%
 \captionof{figure}{Strategy Learner Trade Counts for Different Impact Values}\label{fig:figure}%
 \end{jdffigure}
 
-Figure 5 shows the number of trades we made with the Strategy Learner over the in-sample period of 2008-2009.
+\textbf{Figure 5} shows the number of trades we made with the Strategy Learner over the in-sample period of 2008-2009.
 As we expected, the Strategy Learner with an impact of 0.001had the most trades, followed by the Strategy Learner with an impact of 0.005, and finally the Strategy Learner with an impact of 0.01.
 
 We can see the final count of trades alongside the sharpe ratios for each impact value in the table below.
@@ -229,7 +243,7 @@ We can see the final count of trades alongside the sharpe ratios for each impact
 \captionof{figure}{Strategy Learner Final Trade Count and Sharpe Ratio for Different Impact Values}\label{fig:figure}%
 \end{jdffigure}
 
-As we can see in Figure 6, our hypotheses were correct.
+As we can see in \textbf{Figure 1}, our hypotheses were correct.
 The Strategy Learner with an impact of 0.001 made the most trades with 181 and had the highest sharpe ratio of 2.203.
 The Strategy Learner with an impact of 0.005 made 175 trades and had a sharpe ratio of 1.234.
 Finally, the Strategy Learner with an impact of 0.01 made only 159 trades and had a sharpe ratio of 1.057.
