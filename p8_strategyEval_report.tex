@@ -29,12 +29,10 @@ By using startegies that make decisions solely based on indicators, investors ca
 While this practice can create a trading bot, it takes a lot of human time to develop a strategy that is profitable.
 However, with the advent of machine learning technologies, traders can now develop artifical intelligence algortihms to essentially design a strategy on its own.
 In this report, we hypothesize that a machine learning "strategy learner" will perform better than a human-designed strategy.
-To test this hypothesize, we will compare the performance of a human-designed strategy to a machine learning algorithm over historical pricing data for JPM in Experiment 1.
+To test this hypothesize, we will compare the performance of a human-designed strategy to a machine learning algorithm over historical pricing data for JPM in \textbf{Experiment 1}.
 Then, we will look at the effect trading "impact" has on our strategy learner.
-Trading "impact" is the subtle price difference that occurs when a trader buys or sells shares of a stock.
-A value of 0.005 is commonly chosen for calculations, and represents a 0.5\% price difference.
 We hypothesize that a higher impact will cause our strategy portfolio to make less trades and result in a lower sharpe ratio for our portfolio.
-We will test this by running our strategy learner with varying impact values.
+We will test this by running our strategy learner with varying impact values in \textbf{Experiment 2}.
 
 \section{Indicator Overview}
 \subsection{Percentage Price Oscillator (PPO)}
@@ -76,16 +74,8 @@ We believe by relying on all three signals to agree before making any orders, we
 
 In particular, we buy when:
 \begin{itemize}
-	\item PPO > -2.0
-	\item ROC > -2.0
-	\item and \%K < 20\%
-\end{itemize}
-
-We sell when:
-\begin{itemize}
-	\item PPO < 2.0
-	\item ROC < 2.0
-	\item and \%K > 80\%
+	\item BUY when PPO > -2.0 and ROC > -2.0 and \%K < 20\%
+	\item SELL when PPO < 2.0 and ROC < 2.0 and \%K > 80\%
 \end{itemize}
 
 \subsection{Comparison and Evaluation}
@@ -164,7 +154,7 @@ There are 100 possible state combinations (5 * 5 * 4 = 100).
 Next, we developed a reward function for the Q-Learner.
 We calculated our reward by looking forward by 3 days to see if the action we took will be profitable or not.
 This profit calculation takes into account the commission and impact of the trade. 
-(Commission = 9.95 and Impact = 0.005, except in \textbf{Experiment 2})
+(Commission = 9.95 and Impact = 0.005, except in \textbf{Experiment 2}).
 By rewarding the Q-Learner when we notice profitable trades, we hope it will learn to coninue that pattern in the future.
 Similarly, unprofitable trades are penalized with a negative reward equal to the losses we project by looking forward 3 days.
 Lastly, we set the reward function to penalize the Q-Learner with a reward of -30 when it decides to HOLD.
@@ -176,11 +166,11 @@ While training the Strategy Learner over the in-sample data, we manually tuned t
 We found the best results with a learning rate (alpha) of 0.15, a discount factor (gamma) of 0.85, a random action rate (rar) of 0.5, and a random action decay (rard) of 0.999.
 We did not find dyna hallucinations to be helpful.
 
-We will compare the performance of our Q-Learner to the Manual Strategy in Experiment 1 below.
+We will compare the performance of our Q-Learner to the Manual Strategy in \textbf{Experiment 1} below.
 
 \section{Experiment 1}
 \subsection{Training Period}
-In Experiment 1, we compare our Manual Strategy to our Strategy Learner over the in-sample period of Jan 1, 2008 to Dec 31, 2009.
+In \textbf{Experiment 1}, we compare our Manual Strategy to our Strategy Learner over the in-sample period of Jan 1, 2008 to Dec 31, 2009.
 
 \begin{jdffigure}
 \includegraphics[height=6cm]{Project8Figures/Figure3.png}%
@@ -214,7 +204,7 @@ However, with the unpredictable nature of the stock marker, we are also sure tha
 In order to ensure a strategy can remain positive in the future, it would be valuable to test across many different time periods (this is an opportunity for future follow-up).
 
 \section{Experiment 2}
-In experiment 2, we will consider how the trading impact of our orders influences the behavior of our Strategy Learner.
+In \textbf{Experiment 2}, we will consider how the trading impact of our orders influences the behavior of our Strategy Learner.
 Impact is the price slippage that occurs during the execution of a buy or sell order.
 If a trader buys a stock for \$100 with an impact of 0.05, the total cost would come out to \$100.05.
 Inversely, a sale for \$100 with an impact of 0.05 would yield \$99.95.
