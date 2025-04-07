@@ -150,6 +150,7 @@ Lastly, for \%K, we assign a value 0-3 based on 4 bins:
 \end{itemize}
 
 After finding the 3 correct buckets for a given day, we calculate a discrete state using the formula: \[state = (roc_bin * 20) + (ppo_bin * 4) + percentk_bin \]
+There are 100 possible state combinations (5 * 5 * 4 = 100).
 
 Next, we developed a reward function for the Q-Learner.
 We calculated our reward by looking forward by 3 days to see if the action we took will be profitable or not.
@@ -203,8 +204,8 @@ In order to ensure a strategy can remain positive in the future, it would be val
 \section{Experiment 2}
 In experiment 2, we will consider how the trading impact of our orders influences the behavior of our Strategy Learner.
 Impact is the price slippage that occurs during the execution of a buy or sell order.
-If a trader buys a stock for $100 with an impact of 0.05, the total cost would come out to $100.05.
-Inversely, a sale for $100 with an impact of 0.05 would yield $99.95.
+If a trader buys a stock for \$100 with an impact of 0.05, the total cost would come out to \$100.05.
+Inversely, a sale for \$100 with an impact of 0.05 would yield \$99.95.
 
 We hypothesize that an increased impact will lead to fewer trades and a lower sharpe ratio for the portfolio.
 This is because as impact goes up, the cost of trading increases.
