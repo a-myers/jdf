@@ -108,7 +108,37 @@ However, the Manual Strategy did spend more months with a value below that of th
 In this case, it was about 6 months where the Benchmark Portfolio was worth more.
 Once again though, we see that the Manual Strategy only held cash at times when the Benchmark Portfolio dropped to it's lowest value.
 
-Looking at these results, it may be easy to assume that the Manual Strategy is a good strategy, as the out-of-sample results outperformed even the in-sample-results.
+\hfill
+
+\begin{jdftable}
+\captionof{table}{Performance of Manual Strategy comapred to Benchmark for in-sample and out-of-sample periods.}\label{table:Example}
+\small % Reduce font size
+\begin{tabular}{@{} L{0.15\linewidth} c S L{0.52\linewidth}}
+	\textbf{Portfolio} & \textbf{Cumulative Returns} & \textbf{Std. Dev. of Daily Returns} & \textbf{Mean of Daily Returns} \\
+	\toprule[0.5pt]
+	Benchmark In-Sample & 0.012 & 1604.88 & 2.44\\
+	\midrule
+	Benchmark Out-of-Sample & -0.084 & 809.294 & -16.581\\
+	\midrule
+	Manual In-Sample & 0.093 & 1167.342 & 18.395\\
+	\midrule
+	Manual Out-of-Sample & 0.052 & 480.543 & 10.325\\
+\end{tabular}
+\end{jdftable}
+
+% \begin{jdftable}
+% \captionof{table}{Performance of Manual Strategy comapred to Benchmark for in-sample and out-of-sample periods.}\label{table:Example}
+% \small % Reduce font size
+% \begin{tabular}{@{} L{0.15\linewidth} c S L{0.52\linewidth}}
+% 	\textbf{Stat} & \textbf{Benchmark In-Sample} & \textbf{Benchmark Out-of-Sample} & \textbf{Manual In-Sample} & \textbf{Manual Out-of-Sample} \\
+% 	\toprule[0.5pt]
+% 	Cumulative Returns & 1.23 & 4.56 & 7.89 & asdf\\
+% 	\midrule
+% 	Std. Dev. of Daily Returns & 1.23 & 4.56 & 7.89 & asdf\\
+% \end{tabular}
+% \end{jdftable}
+
+Looking at these results, it may be easy to assume that the Manual Strategy is a good strategy, as the out-of-sample results outperformed even the in-sample-results (in relation to the benchmark).
 Again, this is not expected as we tuned the strategy to perform well on the in-sample data while being blind to out-of-sample data.
 However, looking closely between both Figures 1 and 2, we see that the in-sample results look more consistent and stable than the out-of-sample results.
 It seems like the in-sample-results would be profitable whenever the time period ended, whereas the out-of-sample results seemed to get lucky by being profitable right at the end of the period.
@@ -228,12 +258,26 @@ As we expected, the Strategy Learner with an impact of 0.001had the most trades,
 
 We can see the final count of trades alongside the sharpe ratios for each impact value in the table below.
 
-\begin{jdffigure}
-\includegraphics[height=6cm]{Project8Figures/Figure6.png}%
-\captionof{figure}{Strategy Learner Final Trade Count and Sharpe Ratio for Different Impact Values}\label{fig:figure}%
-\end{jdffigure}
+% \begin{jdffigure}
+% \includegraphics[height=6cm]{Project8Figures/Figure6.png}%
+% \captionof{figure}{Strategy Learner Final Trade Count and Sharpe Ratio for Different Impact Values}\label{fig:figure}%
+% \end{jdffigure}
 
-As we can see in \textbf{Figure 1}, our hypotheses were correct.
+\hfill
+
+\begin{jdftable}
+\captionof{table}{Strategy Learner Final Trade Count and Sharpe Ratio for Different Impact Values.}\label{table:Example}
+\small % Reduce font size
+\begin{tabular}{@{} L{0.15\linewidth} c S L{0.52\linewidth}}
+	\textbf{Stat} & \textbf{Impact 0.001} & \textbf{Impact 0.005} & \textbf{Impact 0.01} \\
+	\toprule[0.5pt]
+	Trade Count & 181 & 175 & 159\\
+	\midrule
+	Sharpe Ratio & 2.203 & 1.234 & 1.057\\
+\end{tabular}
+\end{jdftable}
+
+As we can see in \textbf{Table 2}, our hypotheses were correct.
 The Strategy Learner with an impact of 0.001 made the most trades with 181 and had the highest sharpe ratio of 2.203.
 The Strategy Learner with an impact of 0.005 made 175 trades and had a sharpe ratio of 1.234.
 Finally, the Strategy Learner with an impact of 0.01 made only 159 trades and had a sharpe ratio of 1.057.
